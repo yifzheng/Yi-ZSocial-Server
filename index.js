@@ -4,6 +4,7 @@ const mongoose = require("mongoose"); // get mongoose for mongoDB
 const dotenv = require("dotenv"); // used for environmental variables
 const helment = require("helmet"); // used for secure https connection
 const morgan = require("morgan"); // used for server responses
+const cors = require("cors"); // cors
 const userRoute = require("./routes/users");
 const authRoute = require("./routes/auth");
 const postRoute = require("./routes/posts");
@@ -24,6 +25,7 @@ mongoose
 app.use(express.json());
 app.use(helment());
 app.use(morgan("common"));
+app.use(cors());
 
 // api routes
 app.use("/api/users", userRoute);
