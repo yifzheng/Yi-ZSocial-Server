@@ -54,7 +54,7 @@ router.get("/", async (req, res) => {
 			: await User.findOne({ userName });
 		// remove unecessary properties from retrieved user object before sending back to user
 		const { password, updatedAt, ...other } = user._doc; // '_doc' equates to the user object returned from search
-		res.status(200).json(other);
+		return res.status(200).json(other);
 	} catch (error) {
 		return res.status(500).json(error);
 	}
@@ -72,15 +72,15 @@ router.put("/:id/follow", async (req, res) => {
 				await currentUser.updateOne({
 					$push: { following: req.params.id },
 				});
-				res.status(200).json("Successfully followed the user");
+				return res.status(200).json("Successfully followed the user");
 			} else {
-				res.status(403).json("You already followed this user");
+				return res.status(403).json("You already followed this user");
 			}
 		} catch (error) {
-			res.status(500).json(error);
+			return res.status(500).json(error);
 		}
 	} else {
-		res.status(403).json("You can not follow yourself");
+		return res.status(403).json("You can not follow yourself");
 	}
 });
 
@@ -96,15 +96,15 @@ router.put("/:id/unfollow", async (req, res) => {
 				await currentUser.updateOne({
 					$pull: { following: req.params.id },
 				});
-				res.status(200).json("Successfully unfollowed the user");
+				return res.status(200).json("Successfully unfollowed the user");
 			} else {
-				res.status(403).json("You don't follow this user");
+				return res.status(403).json("You don't follow this user");
 			}
 		} catch (error) {
-			res.status(500).json(error);
+			return res.status(500).json(error);
 		}
 	} else {
-		res.status(403).json("You can not unfollow yourself");
+		return res.status(403).json("You can not unfollow yourself");
 	}
 });
 

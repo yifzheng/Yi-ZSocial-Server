@@ -7,9 +7,9 @@ router.post("/", async (req, res) => {
 	const newPost = new Post(req.body); //create a new post from requerst body
 	try {
 		const savedPost = await newPost.save(); // try to save it
-		res.status(200).json(savedPost); // if successfully saved return success status and return the post
+		return res.status(200).json(savedPost); // if successfully saved return success status and return the post
 	} catch (error) {
-		res.status(500).json(error); // return any errors
+		return res.status(500).json(error); // return any errors
 	}
 });
 
@@ -20,12 +20,12 @@ router.put("/:id", async (req, res) => {
 		// check if the useId of the post matches with the userId of the request body
 		if (post.userId === req.body.userId) {
 			await post.updateOne({ $set: req.body }); // update the post with the contents of the request body
-			res.status(200).json("successfully updated post"); // return on success
+			return res.status(200).json("successfully updated post"); // return on success
 		} else {
-			res.status(403).json("you can only update your own posts"); // if the userId's are not equal return a 403 status error
+			return res.status(403).json("you can only update your own posts"); // if the userId's are not equal return a 403 status error
 		}
 	} catch (error) {
-		res.status(500).json(error); // return any errors
+		return res.status(500).json(error); // return any errors
 	}
 });
 
@@ -36,12 +36,12 @@ router.delete("/:id", async (req, res) => {
 		// check if the useId of the post matches with the userId of the request body
 		if (post.userId === req.body.userId) {
 			await post.deleteOne(); // delete the post
-			res.status(200).json("successfully deleted post"); // return on success
+			return res.status(200).json("successfully deleted post"); // return on success
 		} else {
-			res.status(403).json("you can only delete your own posts"); // if the userId's are not equal return a 403 status error
+			return res.status(403).json("you can only delete your own posts"); // if the userId's are not equal return a 403 status error
 		}
 	} catch (error) {
-		res.status(500).json(error); // return any errors
+		return res.status(500).json(error); // return any errors
 	}
 });
 
@@ -52,13 +52,13 @@ router.put("/:id/like", async (req, res) => {
 		// check whether this likes array in post contains userId
 		if (!post.likes.includes(req.body.userId)) {
 			await post.updateOne({ $push: { likes: req.body.userId } });
-			res.status(200).json("sucessfully liked post");
+			return res.status(200).json("sucessfully liked post");
 		} else {
 			await post.updateOne({ $pull: { likes: req.body.userId } });
-			res.status(200).json("successfully disliekd psot");
+			return res.status(200).json("successfully disliked post");
 		}
 	} catch (error) {
-		res.status(500).json(error);
+		return res.status(500).json(error);
 	}
 });
 
@@ -66,9 +66,9 @@ router.put("/:id/like", async (req, res) => {
 router.get("/:id", async (req, res) => {
 	try {
 		const post = await Post.findById(req.params.id); // find post
-		res.status(200).json(post); // return post
+		return res.status(200).json(post); // return post
 	} catch (error) {
-		res.status(500).json(error);
+		return res.status(500).json(error);
 	}
 });
 
@@ -82,9 +82,9 @@ router.get("/timeline/:userId", async (req, res) => {
 				return Post.find({ userId: friendId });
 			})
 		);
-		res.status(200).json(userPosts.concat(...friendPost));
+		return res.status(200).json(userPosts.concat(...friendPost));
 	} catch (error) {
-		res.status(500).json(error);
+		return res.status(500).json(error);
 	}
 });
 
@@ -93,9 +93,9 @@ router.get("/profile/:userName", async (req, res) => {
 	try {
 		const currentUser = await User.findOne({userName: req.params.userName}); // get current user
 		const userPosts = await Post.find({ userId: currentUser._id });
-		res.status(200).json(userPosts);
+		return res.status(200).json(userPosts);
 	} catch (error) {
-		res.status(500).json(error);
+		return res.status(500).json(error);
 	}
 });
 
