@@ -19,14 +19,15 @@ router.post("/register", async (req, res) => {
 		});
 		// save user and return a reponse
 		const user = await newUser.save();
-		res.status(200).json(user);
+		return res.status(200).json(user);
 	} catch (error) {
-		res.status(500).json(error);
+		return res.status(500).json(error);
 	}
 });
 
 // LOGIN
 router.post("/login", async (req, res) => {
+	console.log(req.body);
 	// try to find user
 	try {
 		// find the user in database if exist
@@ -38,12 +39,14 @@ router.post("/login", async (req, res) => {
 			req.body.password,
 			user.password
 		);
-		!validPassword && res.status(400).json("Wrong password");
+		if (!validPassword) {
+			return res.status(400).json("Wrong password");
+		}
 
 		// if found and password the same return user object back
-		res.status(200).json(user);
+		return res.status(200).json(user);
 	} catch (error) {
-		res.status(500).json(error);
+		return res.status(500).json(error);
 	}
 });
 
